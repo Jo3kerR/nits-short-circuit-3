@@ -1,44 +1,72 @@
 #include<bits/stdc++.h>
 using namespace std;
-
-int main() {
-
-    ios :: sync_with_stdio(0);
-    cin.tie(0);
-
-    int n, m, q; cin >> n >> m >> q;
-    set<pair<int,int>> s;
-    int x = 0, y = 0 ;
-    int dir = 0;
-    while(1) {
-        s.insert({x, y});
-        if((x == 0 && y == m) || (x == n && (y == 0 || y == m))) break ;
-        if(dir == 0) {
-            if(x < n && y < m) ++x, ++ y;
-            else if(x == n) --x, ++y, dir = 3;
-            else ++x, -- y, dir = 1;
+ 
+int main()
+{
+    int n, m; 
+    cin >> n >> m;
+    int illuminated[n + 1][m + 1];
+    memset(illuminated, 0, sizeof(illuminated));
+    illuminated[0][0] = 1;
+    int x = 0, y = 0, d = 0;
+    while(1)
+    {
+        if(d == 0)
+        {
+            x++; 
+            y++;
         }
-        else if(dir == 1) {
-            if(x < n && y > 0) ++x, -- y;
-            else if(x == n) --x, --y, dir = 2;
-            else ++x, ++y, dir = 0;
+        else if(d == 1)
+        {
+            x++;
+            y--;
         }
-        else if(dir == 2) {
-            if(x > 0 && y > 0) --x, --y ;
-            else if(x == 0) ++x, -- y, dir = 1;
-            else --x, ++y, dir = 3;
+        else if(d == 2)
+        {
+            x--;
+            y--;
         }
-        else { 
-            if(x > 0 && y < m) --x, ++y ;
-            else if(x == 0) ++x, ++y, dir = 0;
-            else --x, -- y, dir = 2;
+        else if(d == 3)
+        {
+            x--;
+            y++;
+        }
+ 
+        illuminated[x][y] = 1;
+ 
+        // Hits a corner
+        if((x == 0 || x == n) && (y == 0 || y == m)) break;
+        
+        // Hits a wall
+        if(x == 0)
+        {
+            if(d == 2) d = 1;
+            else if(d == 3) d = 0;
+        }
+        else if(x == n)
+        {
+            if(d == 0) d = 3;
+            else if(d == 1) d = 2;
+        }
+        else if(y == 0)
+        {
+            if(d == 1) d = 0;
+            else if(d == 2) d = 3;
+        }
+        else if(y == m)
+        {
+            if(d == 0) d = 1;
+            else if(d == 3) d = 2;
         }
     }
-    while(q--) {
-        int x, y; cin >> x >> y;
-        if(s.find({x, y}) != s.end()) cout << "YES\n" ;
-        else cout << "NO\n" ;
+ 
+    int q; 
+    cin >> q;
+    while(q--)
+    {
+        int x, y; 
+        cin >> x >> y;
+        if(illuminated[x][y]) cout << "YES" << endl;
+        else cout << "NO" << endl;
     }
-
-    return 0;
 }
