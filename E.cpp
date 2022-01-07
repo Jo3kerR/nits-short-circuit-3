@@ -22,35 +22,40 @@ int main() {
         long long sum = 0 ;
 
         for(auto [x,y] : a) {
-            if(x >= k-x) { 
-                if(k-x <= m) {
+            if(x >= k-x) { // second part, (according to editorial)
+                if(k-x <= m) { // we have the sufficient number of operations left to make it 0
                     sum += 0 ;
                     ans[y].second = k-x ;
                     m -= k-x ;
                 }
-                else {
+                else { // we have to perform type 1 operations
                     sum += x - m ;
                     ans[y].first = m;
                     m = 0 ;
                 }
             }
-            else { 
+            else { // first part
                 sum += x - min(m, x) ;
                 ans[y].first = min(m, x) ;
                 m -= min(m, x) ;
             }
         }
 
-        if(m % 2 == 0) {
+        if(m % 2 == 0) { // case 1 
             ans[0].first += m / 2 ;
             ans[0].second += m / 2 ;
         }
-        else {
-            if(k % 2 == 1) {
+        else {            
+            if(k % 2 == 0) { // case 2
+                ans[0].second += (m + 1) / 2;
+                ans[0].first += m / 2;
+                sum += (1 % k) ;
+            }
+            else { // case 3
                 bool ok = 0;
                 for(auto [x,y] : a) {
-                    if(ans[y].first) {
-                        if(m + ans[y].first - (k-x) >= 0) {
+                    if(ans[y].first) { // we have performed type 1 operations
+                        if(m + ans[y].first - (k-x) >= 0) { // check if we can perform type 2 opeartions
                             m += ans[y].first - (k-x);
                             ans[y].first = 0;
                             ans[y].second = k-x ;
@@ -58,8 +63,8 @@ int main() {
                             break ;
                         }
                     } 
-                    else if(ans[y].second) {
-                        if(m + ans[y].second - x >= 0) {
+                    else if(ans[y].second) { // we have performed type 2 operations
+                        if(m + ans[y].second - x >= 0) { // check if we can perform type 1 opeartions
                             m += ans[y].second - x ;
                             ans[y].first = x ;
                             ans[y].second = 0 ;
@@ -67,7 +72,7 @@ int main() {
                             break ;
                         }
                     }
-                    else if(k <= m) {
+                    else if(k <= m) { // we have not performed any operation, i.e. its strength was 0 initially
                         m -= k ;
                         ans[y].first = 0 ;
                         ans[y].second = k ;
@@ -80,11 +85,6 @@ int main() {
                 ans[0].first += m / 2;
 
                 if(!ok) sum += (1 % k);
-            }
-            else {
-                ans[0].second += (m + 1) / 2;
-                ans[0].first += m / 2;
-                sum += (1 % k) ;
             }
         }
 
