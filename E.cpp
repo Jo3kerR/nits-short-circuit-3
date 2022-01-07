@@ -84,7 +84,7 @@ int main() {
                 ans[0].second += (m + 1) /2;
                 ans[0].first += m / 2;
 
-                if(!ok) sum += (1 % k);
+                if(!ok) sum ++ ;
             }
         }
 
